@@ -255,13 +255,11 @@ else:
         new_file.write(x+"\n")
     new_file.close()
 
+    print(variables)
     #OUT out OUT out OUT out OUT out OUT out OUT out OUT out OUT out OUT out###
     a = [] #inst
     b = [] #oper
     c = [] #lit
-    print(labels)
-    print(d)
-    print(code_jumps)
     for i in range(len(instructions)):
         a.append(instructions[i][0])
         x = instructions[i][1].split(",")
@@ -276,10 +274,11 @@ else:
             c.append(lit)
             x[0] = "Dir"
         else:
-            c.append("00000000")
+            y = ""
             if x[0] == "A" or x[0] == "B" or x[0] == "(A)" or x[0] == "(B)": 
                 ...
             else:
+                y = x[0][:]
                 if x[0][0] == "(":
                     x[0] = "(Dir)"
                 else:
@@ -288,10 +287,29 @@ else:
                 if x[1] == "A" or x[1] == "B" or x[1] == "(A)" or x[1] =="(B)": 
                     ...
                 else:
+                    y = x[1][:]
                     if x[1][0] == "(":
                         x[1] = "(Dir)"
                     else:
                         x[1] = "Lit"
+            if y != "":
+                y = y.replace("(","").replace(")","")
+                print(y)
+                try:
+                    int(y)
+                    lit = (str(bin(int(y))))[2:]
+                    while len(lit) < 8:
+                        lit = "0" + lit
+                    c.append(lit)
+                except:
+                    lit = (str(bin(int(variables[y])-1)))[2:]
+                    while len(lit) < 8:
+                        lit = "0" + lit
+                    c.append(lit)
+
+            else:
+                c.append("00000000") ##seguir aqui
+        
         y = ""
         for k in x:
             y += k+","
