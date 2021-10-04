@@ -132,15 +132,31 @@ JCR = {
 JOV = {
 "Dir":     "1011011"
 }
+CALL = {
+"Dir":     "1011100"
+}
+RET = {
+"":        "1011101"
+}
+PUSH = {
+"A":       "1011111",
+"B":       "1100000"
+}
+POP = {
+"A":       "1100001",
+"B":       "1100010"
+}
 opCodes = {
 'MOV':0,'ADD':1,'SUB':2,'AND':3,'OR':4,'NOT':5,'XOR':6,'SHL':7,'SHR':8,'INC':9,
 'RST':10,'CMP':11,'JMP':12,'JEQ':13,'JNE':14,'JGT':15,'JLT':16,'JGE':17,
-'JLE':18,'JCR':19,'JOV':20
+'JLE':18,'JCR':19,'JOV':20,'CALL':21,'RET':22,'PUSH':23,'POP':24
 }
 labels = {}
 code_jumps = {}
 variables = {}
 instructions = []
+lines_data = -2
+lines_code = 0
 check = 0
 error = False
 jumps = []
@@ -152,6 +168,10 @@ f = open("p3F_1.ass","r") #Lectura del .ass  #p3F_1   p3F_2i
 lines = f.readlines()
 
 for i in range(len(lines)): #Limpiador de \n
+    if check == 0:
+        lines_data += 1
+    else:
+        lines_code += 1
     lines[i] = lines[i][:-1]
     if lines[i][-1] != ":": #Quitar espacios innecesarios
         if lines[i][0] == " ":
@@ -175,6 +195,9 @@ for i in range(len(lines)): #Limpiador de \n
                         if k not in variables and k != "A" and k != "B":
                             try:
                                 int(k)
+                                if int(k) > 255:
+                                    error = True
+                                    error_lines.append(i)#Out of range in bits.
                             except:
                                 error = True
                                 error_lines.append(i) #Variable no existente.
@@ -192,7 +215,7 @@ for i in range(len(lines)): #Limpiador de \n
                                 if lines[i][1][k] == "#":
                                     error = True
                                     #añade si esta mal escrito el hexagecimal.
-                                    error_lines.append(i)      
+                                    error_lines.append(i)
                         else:
                             error = True
                             #simplemente hay un simbolo extraño.
@@ -239,7 +262,6 @@ if error == True:
             x += str(lines[error_lines[i]][k])+" "
         print(str(error_lines[i]+1)+": "+x)
 else:
-    print("Ejecutando lectura.\n")
     ### MEM mem MEM mem MEM mem MEM mem MEM mem MEM mem MEM mem MEM mem MEM ###
     new_file=open("newfile.mem",mode="w",encoding="utf-8")
     ks = list(variables.keys())
@@ -255,7 +277,6 @@ else:
         new_file.write(x+"\n")
     new_file.close()
 
-    print(variables)
     #OUT out OUT out OUT out OUT out OUT out OUT out OUT out OUT out OUT out###
     a = [] #inst
     b = [] #oper
@@ -284,7 +305,7 @@ else:
                 else:
                     x[0] = "Lit"
             if len(x) == 2:
-                if x[1] == "A" or x[1] == "B" or x[1] == "(A)" or x[1] =="(B)": 
+                if x[1] == "A" or x[1] == "B" or x[1] == "(A)" or x[1] =="(B)":
                     ...
                 else:
                     y = x[1][:]
@@ -294,9 +315,9 @@ else:
                         x[1] = "Lit"
             if y != "":
                 y = y.replace("(","").replace(")","")
-                print(y)
                 try:
                     int(y)
+                    print(y)
                     lit = (str(bin(int(y))))[2:]
                     while len(lit) < 8:
                         lit = "0" + lit
@@ -306,7 +327,6 @@ else:
                     while len(lit) < 8:
                         lit = "0" + lit
                     c.append(lit)
-
             else:
                 c.append("00000000") ##seguir aqui
         
@@ -321,3 +341,6 @@ else:
         exec("x = "+str(a[i])+"["+'"'+str(b[i])+'"'+"]")
         new_file.write(x+c[i]+"\n")
     new_file.close()
+    print("La cantidad de lineas de 'DATA' son: "+str(lines_data))
+    print("La cantidad de lineas de 'CODE' son: "+str(lines_code))
+    print("Se han generado 'newfile.out' y 'newfile.mem'.\n")
