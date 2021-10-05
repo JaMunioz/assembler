@@ -164,7 +164,7 @@ pos_jumps = []
 error_lines = []
 cond = 0
 
-f = open("p3F_1.ass","r") #Lectura del .ass  #p3F_1   p3F_2i 
+f = open("p1_punto.ass","r") #Lectura del .ass  #p3F_1   p3F_2i 
 lines = f.readlines()
 
 for i in range(len(lines)): #Limpiador de \n
@@ -317,7 +317,6 @@ else:
                 y = y.replace("(","").replace(")","")
                 try:
                     int(y)
-                    print(y)
                     lit = (str(bin(int(y))))[2:]
                     while len(lit) < 8:
                         lit = "0" + lit
