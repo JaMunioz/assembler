@@ -1,6 +1,3 @@
-from typing import Hashable
-
-
 MOV = {
 "A,B":     "0000000", 
 "B,A":     "0000001",
