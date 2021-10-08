@@ -45,3 +45,5 @@ CONTINUAR:
 FIN:
   MOV A,(res)
   MOV (final),A
+
+

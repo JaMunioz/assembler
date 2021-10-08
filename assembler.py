@@ -1,3 +1,6 @@
+from typing import Hashable
+
+
 MOV = {
 "A,B":     "0000000", 
 "B,A":     "0000001",
@@ -164,7 +167,7 @@ pos_jumps = []
 error_lines = []
 cond = 0
 
-f = open("p1_punto.ass","r") #Lectura del .ass  #p3F_1   p3F_2i 
+f = open("p3F_1.ass","r") #Lectura del .ass  #p3F_1   p3F_2i 
 lines = f.readlines()
 
 for i in range(len(lines)): #Limpiador de \n
@@ -190,17 +193,67 @@ for i in range(len(lines)): #Limpiador de \n
                     pos_jumps.append(i)
                 else:
                     #para el caso de los opcodes solo quedara lo de la derecha.
+                    v1 = False
+                    v2 = False
                     x = lines[i][1].replace("(","").replace(")","").split(",") 
+                    y = ""
+                    if lines[i][1][0] == "(":
+                        v1 = True
+                    if lines[i][1][-1] == ")":
+                        v2 = True
+                    p = 0
+                    H = 0 
                     for k in x:
+                        if p == 1:
+                            y += ","
                         if k not in variables and k != "A" and k != "B":
                             try:
-                                int(k)
-                                if int(k) > 255:
-                                    error = True
-                                    error_lines.append(i)#Out of range in bits.
+                                if k[0] == "#": #hexagesimal
+                                    H = 1
+                                    if int(k[1:],16) > 255:
+                                        print(int(k[1:],16))
+                                        error = True
+                                        error_lines.append(i)
+                                        #Out of range in bits.
+
+                                else: #decimal
+                                    int(k)
+                                    if int(k) > 255:
+                                        error = True
+                                        error_lines.append(i)
+                                        #Out of range in bits.
+
+                                    if v1 == True and p==0:
+                                        y += "(Dir)"
+                                        v1 = False
+                                    elif v2 == True and p==1:
+                                        y += "(Dir)"
+                                    else:
+                                        y += "Lit"
                             except:
                                 error = True
                                 error_lines.append(i) #Variable no existente.
+                        else:
+                            if k == "A" or k == "B":
+                                if v1 == True and p == 0:
+                                    y += "("+str(k)+")"
+                                elif v2 == True and p == 1:
+                                    y += "("+str(k)+")"
+                                else:
+                                    y += str(k)
+                            else:
+                                if v1 == True and p == 0:
+                                    y += "(Dir)"
+                                elif v2 == True and p == 1:
+                                    y += "(Dir)"
+                                else:
+                                    y += "Lit"
+                        p += 1
+                    x = 0
+                    exec("if "+'"'+str(y)+'"'+" in "+str(lines[i][0])+":\n    x = 1")
+                    if x == 0 and H == 0:
+                        error = True
+                        error_lines.append(i) #Existe la instrucion, pero no su llave.
             else:
                 if check == 1: #Se esta analizando codigo despues de 'CODE:'
                     error = True
@@ -266,10 +319,10 @@ else:
     new_file=open("newfile.mem",mode="w",encoding="utf-8")
     ks = list(variables.keys())
     for k in ks:
-        try:
+        try: #Si es decimal en DATA:
             x = int(lines[variables[k]][1])
             x = (str(bin(x)))[2:]
-        except:
+        except: #Si es hexagesimal en DATA:
             x = int(lines[variables[k]][1][1:],16)
             x = (str(bin(x)))[2:]
         while len(x) < 8:
@@ -316,11 +369,18 @@ else:
             if y != "":
                 y = y.replace("(","").replace(")","")
                 try:
-                    int(y)
-                    lit = (str(bin(int(y))))[2:]
-                    while len(lit) < 8:
-                        lit = "0" + lit
-                    c.append(lit)
+                    if y[0] == "#": #si es hexagesimal en CODE:
+                        y = int(y[1:],16)
+                        lit = (str(bin(int(y))))[2:]
+                        while len(lit) < 8:
+                            lit = "0" + lit
+                        c.append(lit)
+                    else: #si es decimal en CODE:
+                        int(y)
+                        lit = (str(bin(int(y))))[2:]
+                        while len(lit) < 8:
+                            lit = "0" + lit
+                        c.append(lit)
                 except:
                     lit = (str(bin(int(variables[y])-1)))[2:]
                     while len(lit) < 8:
