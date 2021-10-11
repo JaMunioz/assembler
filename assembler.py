@@ -1,156 +1,77 @@
 MOV = {
-"A,B":     "0000000", 
-"B,A":     "0000001",
-"A,Lit":   "0000010",
-"B,Lit":   "0000011",
-"A,(Dir)": "0100101",
-"B,(Dir)": "0100110",
-"(Dir),A": "0100111",
-"(Dir),B": "0101000",
-"A,(B)":   "0101001",
-"B,(B)":   "0101010",
-"(B),A":   "0101011"
-}
+"A,B":     "0000000", "B,A":     "0000001", "A,Lit":   "0000010",
+"B,Lit":   "0000011", "A,(Dir)": "0100101", "B,(Dir)": "0100110",
+"(Dir),A": "0100111", "(Dir),B": "0101000", "A,(B)":   "0101001",
+"B,(B)":   "0101010", "(B),A":   "0101011"}
 ADD = {  
-"A,B":     "0000100",
-"B,A":     "0000101",
-"A,Lit":   "0000110",
-"B,Lit":   "0000111",
-"A,(Dir)": "0101100",
-"B,(Dir)": "0101101",
-"A,(B)":   "0101110",
-"(Dir)":   "0101111"
-}
+"A,B":     "0000100", "B,A":     "0000101", "A,Lit":   "0000110",
+"B,Lit":   "0000111", "A,(Dir)": "0101100", "B,(Dir)": "0101101",
+"A,(B)":   "0101110", "(Dir)":   "0101111"}
 SUB = { 
-"A,B":     "0001000",
-"B,A":     "0001001",
-"A,Lit":   "0001010",
-"B,Lit":   "0001011",
-"A,(Dir)": "0110000",
-"B,(Dir)": "0110001",
-"A,(B)":   "0110010",
-"(Dir)":   "0110011"
-}
+"A,B":     "0001000", "B,A":     "0001001", "A,Lit":   "0001010",
+"B,Lit":   "0001011", "A,(Dir)": "0110000", "B,(Dir)": "0110001",
+"A,(B)":   "0110010", "(Dir)":   "0110011"}
 AND = {
-"A,B":     "0001100",
-"B,A":     "0001101",
-"A,Lit":   "0001110",
-"B,Lit":   "0001111",
-"A,(Dir)": "0110100",
-"B,(Dir)": "0110101",
-"A,(B)":   "0110110",
-"(Dir)":   "0110111"
-}
+"A,B":     "0001100", "B,A":     "0001101", "A,Lit":   "0001110",
+"B,Lit":   "0001111", "A,(Dir)": "0110100", "B,(Dir)": "0110101",
+"A,(B)":   "0110110", "(Dir)":   "0110111"}
 OR = { 
-"A,B":     "0010000",
-"B,A":     "0010001",
-"A,Lit":   "0010010",
-"B,Lit":   "0010011",
-"A,(Dir)": "0111000",
-"B,(Dir)": "0111001",
-"A,(B)":   "0111010",
-"(Dir)":   "0111011"
-}
+"A,B":     "0010000", "B,A":     "0010001", "A,Lit":   "0010010",
+"B,Lit":   "0010011", "A,(Dir)": "0111000", "B,(Dir)": "0111001",
+"A,(B)":   "0111010", "(Dir)":   "0111011"}
 NOT = {  
-"A,A":     "0010100",
-"A,B":     "0010101",
-"B,A":     "0010110",
-"B,B":     "0010111",
-"(Dir),A": "0111100",
-"(Dir),B": "0111101",
-"(B)":     "0111110"
-}
+"A,A":     "0010100", "A,B":     "0010101", "B,A":     "0010110",
+"B,B":     "0010111", "(Dir),A": "0111100", "(Dir),B": "0111101",
+"(B)":     "0111110"}
 XOR = { 
-"A,B":     "0011000",
-"B,A":     "0011001",
-"A,Lit":   "0011010",
-"B,Lit":   "0011011",
-"A,(Dir)": "0111111",
-"B,(Dir)": "1000000",
-"A,(B)":   "1000001",
-"(Dir)":   "1000010"
-}
+"A,B":     "0011000", "B,A":     "0011001", "A,Lit":   "0011010",
+"B,Lit":   "0011011", "A,(Dir)": "0111111", "B,(Dir)": "1000000",
+"A,(B)":   "1000001", "(Dir)":   "1000010"}
 SHL = { 
-"A,A":     "0011100",
-"A,B":     "0011101",
-"B,A":     "0011110",
-"B,B":     "0011111",
-"(Dir),A": "1000011", 
-"(Dir),B": "1000100", 
-"(B)":     "1000101"
-}
+"A,A":     "0011100", "A,B":     "0011101", "B,A":     "0011110",
+"B,B":     "0011111", "(Dir),A": "1000011", "(Dir),B": "1000100", 
+"(B)":     "1000101"}
 SHR = { 
-"A,A":     "0100000",
-"A,B":     "0100001",
-"B,A":     "0100010",
-"B,B":     "0100011",
-"(Dir),A": "1000110", 
-"(Dir),B": "1000111", 
-"(B)":     "1001000" 
-}
+"A,A":     "0100000", "A,B":     "0100001", "B,A":     "0100010",
+"B,B":     "0100011", "(Dir),A": "1000110", "(Dir),B": "1000111", 
+"(B)":     "1001000" }
 INC = { 
-"B":       "0100100",
-"(Dir)":   "1001001",
-"(B)":     "1001010"
-}
+"B":       "0100100", "(Dir)":   "1001001", "(B)":     "1001010"}
 RST = { 
-"(Dir)":   "1001011",
-"(B)":     "1001100"
-}
+"(Dir)":   "1001011", "(B)":     "1001100"}
 CMP = { 
-"A,B":     "1001101",
-"A,Lit":   "1001110",
-"B,Lit":   "1001111",
-"A,(Dir)": "1010000",
-"B,(Dir)": "1010001",
-"A,(B)":   "1010010"
-}
+"A,B":     "1001101", "A,Lit":   "1001110", "B,Lit":   "1001111",
+"A,(Dir)": "1010000", "B,(Dir)": "1010001", "A,(B)":   "1010010"}
 JMP = {
-"Dir":     "1010011"
-}
+"Dir":     "1010011"}
 JEQ = {
-"Dir":     "1010100"
-}
+"Dir":     "1010100"}
 JNE = {
-"Dir":     "1010101"
-}
+"Dir":     "1010101"}
 JGT = {
-"Dir":     "1010110"
-}
+"Dir":     "1010110"}
 JLT = {
-"Dir":     "1010111"
-}
+"Dir":     "1010111"}
 JGE = {
-"Dir":     "1011000"
-}
+"Dir":     "1011000"}
 JLE = {
-"Dir":     "1011001"
-}
+"Dir":     "1011001"}
 JCR = {
-"Dir":     "1011010"
-}
+"Dir":     "1011010"}
 JOV = {
-"Dir":     "1011011"
-}
+"Dir":     "1011011"}
 CALL = {
-"Dir":     "1011100"
-}
+"Dir":     "1011100"}
 RET = {
-"":        "1011101"
-}
+"":        "1011101"}
 PUSH = {
-"A":       "1011111",
-"B":       "1100000"
-}
+"A":       "1011111", "B":       "1100000"}
 POP = {
-"A":       "1100001",
-"B":       "1100010"
-}
+"A":       "1100001", "B":       "1100010"}
 opCodes = {
 'MOV':0,'ADD':1,'SUB':2,'AND':3,'OR':4,'NOT':5,'XOR':6,'SHL':7,'SHR':8,'INC':9,
 'RST':10,'CMP':11,'JMP':12,'JEQ':13,'JNE':14,'JGT':15,'JLT':16,'JGE':17,
-'JLE':18,'JCR':19,'JOV':20,'CALL':21,'RET':22,'PUSH':23,'POP':24
-}
+'JLE':18,'JCR':19,'JOV':20,'CALL':21,'RET':22,'PUSH':23,'POP':24}
 labels = {}
 code_jumps = {}
 variables = {}
@@ -177,7 +98,10 @@ for i in range(len(lines)): #Limpiador de \n
         if lines[i][0] == " ":
             lines[i] = lines[i][2:]
         lines[i] = lines[i].split(" ")
+        if len(lines[i]) == 1:
+            lines[i].append(0)
         if len(lines[i]) != 2:
+            print(lines[i])
             error = True
             error_lines.append(i) #si falta la existencia de un valor
         else: 
@@ -186,8 +110,26 @@ for i in range(len(lines)): #Limpiador de \n
                 instructions.append([lines[i][0],lines[i][1]])
                 if (n == 12 or n == 13 or n == 14 or n == 15 or n == 16 or
                     n == 17 or n == 18 or n == 19 or n == 20):
+                    k = lines[i][1]
                     jumps.append(lines[i][1]+":")
                     pos_jumps.append(i)
+                    try:
+                        if k[0] == "#": #hexagesimal
+                            H = 1
+                            if int(k[1:],16) > 255:
+                                error = True
+                                error_lines.append(i)
+                                #Out of range in bits.
+
+                        else: #decimal
+                            int(k)
+                            if int(k) > 255:
+                                error = True
+                                error_lines.append(i)
+                                #Out of range in bits.
+                    except:
+                        error = True
+                        error_lines.append(i) #Valor acompañado del jump no existente.
                 else:
                     #para el caso de los opcodes solo quedara lo de la derecha.
                     v1 = False
@@ -208,7 +150,6 @@ for i in range(len(lines)): #Limpiador de \n
                                 if k[0] == "#": #hexagesimal
                                     H = 1
                                     if int(k[1:],16) > 255:
-                                        print(int(k[1:],16))
                                         error = True
                                         error_lines.append(i)
                                         #Out of range in bits.
@@ -292,15 +233,16 @@ for i in range(len(lines)): #Limpiador de \n
 if lines[0] == "DATA:":
     check += 1
 
-if check != 2:
-    error = True
+#if check != 2:
+    #error = True
 
+"""
 #revisar los jumps.
 for i in range(len(jumps)):  #Existe pos para indicar la linea con error.
     if jumps[i] not in labels:
         error = True
         error_lines.append(pos_jumps[i])
-
+"""
 if error == True:
     error_lines.sort()
     print("\nEl documento '.ass' no esta bien formulado, a continuacion se "
@@ -338,8 +280,17 @@ else:
         a[i] == "JLT" or a[i] == "JGE" or a[i] == "JLE" or a[i] == "JCR"
         or a[i] == "JOV"):
             y = x[0].replace("(","").replace(")","")
-            lit = code_jumps[y+":"]
-            lit = (str(bin(lit)))[2:]
+            lit = ""
+            try: #si es un decimal en los jumps:
+                int(y)
+                lit = (str(bin(int(y))))[2:]
+            except:
+                if y[0] == "#": #si es hexagesimal en los jumps:
+                    y = int(y[1:],16)
+                    lit = (str(bin(int(y))))[2:]
+                else: #posicion de los labels para los jumps:
+                    lit = code_jumps[y+":"] 
+                    lit = (str(bin(lit)))[2:]
             while len(lit) < 8:
                 lit = "0" + lit
             c.append(lit)
@@ -400,3 +351,4 @@ else:
     print("La cantidad de lineas de 'DATA' son: "+str(lines_data))
     print("La cantidad de lineas de 'CODE' son: "+str(lines_code))
     print("Se han generado 'newfile.out' y 'newfile.mem'.\n")
+    

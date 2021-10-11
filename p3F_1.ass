@@ -1,7 +1,7 @@
 DATA:
   lista #A0
   n 5
-  res 0
+  res 6
   aux 0
 CODE:
 siguiente:
