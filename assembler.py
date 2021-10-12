@@ -84,6 +84,10 @@ jumps = []
 pos_jumps = []
 error_lines = []
 cond = 0
+code_begin = 0 #Comienzo del codigo sin delay. /////
+code_lines = []
+cond_cmp = 0 #indica que hay un cmp en funcionamiento.
+n = 0
 
 f = open("p3F_1.ass","r") #Lectura del .ass  #p3F_1   p3F_2i 
 lines = f.readlines()
@@ -110,6 +114,11 @@ for i in range(len(lines)): #Limpiador de \n
                 instructions.append([lines[i][0],lines[i][1]])
                 if (n == 12 or n == 13 or n == 14 or n == 15 or n == 16 or
                     n == 17 or n == 18 or n == 19 or n == 20):
+                    if cond_cmp == 1 or n == 12:
+                        ...
+                    else:
+                        error = True
+                        error_lines.append(i) #No se añadio un cmp respectivo.
                     k = lines[i][1]
                     jumps.append(lines[i][1]+":")
                     pos_jumps.append(i)
@@ -128,9 +137,12 @@ for i in range(len(lines)): #Limpiador de \n
                                 error_lines.append(i)
                                 #Out of range in bits.
                     except:
-                        error = True
-                        error_lines.append(i) #Valor acompañado del jump no existente.
+                        ... #se revisara posteriormente los saltos a labels.
                 else:
+                    if n == 11:
+                        cond_cmp = 1
+                    else:
+                        cond_cmp = 0
                     #para el caso de los opcodes solo quedara lo de la derecha.
                     v1 = False
                     v2 = False
@@ -152,6 +164,7 @@ for i in range(len(lines)): #Limpiador de \n
                                     if int(k[1:],16) > 255:
                                         error = True
                                         error_lines.append(i)
+                                        cond_cmp = 0
                                         #Out of range in bits.
 
                                 else: #decimal
@@ -159,6 +172,7 @@ for i in range(len(lines)): #Limpiador de \n
                                     if int(k) > 255:
                                         error = True
                                         error_lines.append(i)
+                                        cond_cmp = 0
                                         #Out of range in bits.
 
                                     if v1 == True and p==0:
@@ -171,6 +185,7 @@ for i in range(len(lines)): #Limpiador de \n
                             except:
                                 error = True
                                 error_lines.append(i) #Variable no existente.
+                                cond_cmp = 0
                         else:
                             if k == "A" or k == "B":
                                 if v1 == True and p == 0:
@@ -192,6 +207,7 @@ for i in range(len(lines)): #Limpiador de \n
                     if x == 0 and H == 0:
                         error = True
                         error_lines.append(i) #Existe la instrucion, pero no su llave.
+                        cond_cmp = 0
             else:
                 if check == 1: #Se esta analizando codigo despues de 'CODE:'
                     error = True
@@ -213,9 +229,11 @@ for i in range(len(lines)): #Limpiador de \n
                             error_lines.append(i)
 
     else: 
+        cond_cmp = 0
         if i != 0 and cond == 0: #identificar posicion del "CODE".
             check = 1
             cond = 1
+            code_begin = i
             index_code = i
             d = -index_code-1 #delay
         elif check != 0:
@@ -348,7 +366,11 @@ else:
         exec("x = "+str(a[i])+"["+'"'+str(b[i])+'"'+"]")
         new_file.write(x+c[i]+"\n")
     new_file.close()
-    print("La cantidad de lineas de 'DATA' son: "+str(lines_data))
-    print("La cantidad de lineas de 'CODE' son: "+str(lines_code))
+    if check == 2:
+        print("La cantidad de lineas de 'DATA' son: "+str(lines_data))
+        print("La cantidad de lineas de 'CODE' son: "+str(lines_code))
+    else:
+        print("La cantidad de lineas de 'DATA' son: "+str(lines_code))
+        print("La cantidad de lineas de 'CODE' son: "+str(lines_data))
     print("Se han generado 'newfile.out' y 'newfile.mem'.\n")
     
