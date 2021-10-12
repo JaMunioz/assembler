@@ -78,12 +78,13 @@ variables = {}
 instructions = []
 lines_data = -2
 lines_code = 0
-check = 0
+check = 1
 error = False
 jumps = []
 pos_jumps = []
 error_lines = []
 cond = 0
+error_type = []
 
 f = open("p3F_1.ass","r") #Lectura del .ass  #p3F_1   p3F_2i 
 lines = f.readlines()
@@ -104,6 +105,7 @@ for i in range(len(lines)): #Limpiador de \n
             print(lines[i])
             error = True
             error_lines.append(i) #si falta la existencia de un valor
+            error_type.append("Debe ir la instancia, junto al operador (ej: MOV A,B A es invalido, mientras que MOV A,B no lo es.)")
         else: 
             if lines[i][0] in opCodes: #checking the command.
                 n = opCodes[lines[i][0]] #checking jumps.
@@ -119,6 +121,7 @@ for i in range(len(lines)): #Limpiador de \n
                             if int(k[1:],16) > 255:
                                 error = True
                                 error_lines.append(i)
+                                error_type.append("El valor entregado en hexagesimal es mayor a 255 en decimal")
                                 #Out of range in bits.
 
                         else: #decimal
@@ -126,10 +129,12 @@ for i in range(len(lines)): #Limpiador de \n
                             if int(k) > 255:
                                 error = True
                                 error_lines.append(i)
+                                error_type.append("El numero en decimal no puede ser mayor a 255.")
                                 #Out of range in bits.
                     except:
                         error = True
                         error_lines.append(i) #Valor acompañado del jump no existente.
+                        error_type.append("Se debe ingresar un valor decimal o hexagesimal, perteneciente al intervalo de [0,255]")
                 else:
                     #para el caso de los opcodes solo quedara lo de la derecha.
                     v1 = False
@@ -152,6 +157,7 @@ for i in range(len(lines)): #Limpiador de \n
                                     if int(k[1:],16) > 255:
                                         error = True
                                         error_lines.append(i)
+                                        ("El valor entregado en hexagesimal supera el es mayor a 255 en decimal")
                                         #Out of range in bits.
 
                                 else: #decimal
@@ -159,6 +165,7 @@ for i in range(len(lines)): #Limpiador de \n
                                     if int(k) > 255:
                                         error = True
                                         error_lines.append(i)
+                                        error_type.append("El numero en decimal no puede ser mayor a 255.")
                                         #Out of range in bits.
 
                                     if v1 == True and p==0:
@@ -171,6 +178,7 @@ for i in range(len(lines)): #Limpiador de \n
                             except:
                                 error = True
                                 error_lines.append(i) #Variable no existente.
+                                error_type.append("Se esta intentando utilizar una variable no existente.")
                         else:
                             if k == "A" or k == "B":
                                 if v1 == True and p == 0:
@@ -192,10 +200,12 @@ for i in range(len(lines)): #Limpiador de \n
                     if x == 0 and H == 0:
                         error = True
                         error_lines.append(i) #Existe la instrucion, pero no su llave.
+                        error_type.append("Existe la instacia, pero no su operador. (ej: MOV A,A,A existiendo MOV, pero no el A,A,A).")
             else:
                 if check == 1: #Se esta analizando codigo despues de 'CODE:'
                     error = True
                     error_lines.append(i) #Opcode inexistente.
+                    error_type.append("No existe la instacia: "+str(lines[i][0])+".")
                 else: #variables
                     variables[lines[i][0]] = i 
                     try:
@@ -243,6 +253,7 @@ for i in range(len(jumps)):  #Existe pos para indicar la linea con error.
         error = True
         error_lines.append(pos_jumps[i])
 """
+
 if error == True:
     error_lines.sort()
     print("\nEl documento '.ass' no esta bien formulado, a continuacion se "
@@ -252,7 +263,7 @@ if error == True:
         x = ""
         for k in range(len(lines[error_lines[i]])):
             x += str(lines[error_lines[i]][k])+" "
-        print(str(error_lines[i]+1)+": "+x)
+        print(str(error_lines[i]+1)+": "+x,error_type[i])
 else:
     ### MEM mem MEM mem MEM mem MEM mem MEM mem MEM mem MEM mem MEM mem MEM ###
     new_file=open("newfile.mem",mode="w",encoding="utf-8")
@@ -348,10 +359,6 @@ else:
         exec("x = "+str(a[i])+"["+'"'+str(b[i])+'"'+"]")
         new_file.write(x+c[i]+"\n")
     new_file.close()
-    if check == 2:
-        print("La cantidad de lineas de 'DATA' son: "+str(lines_data))
-        print("La cantidad de lineas de 'CODE' son: "+str(lines_code))
-    else:
-        print("La cantidad de lineas de 'DATA' son: "+str(lines_code))
-        print("La cantidad de lineas de 'CODE' son: "+str(lines_data))
+    print("La cantidad de lineas de 'DATA' son: "+str(0))
+    print("La cantidad de lineas de 'CODE' son: "+str(lines_code))
     print("Se han generado 'newfile.out' y 'newfile.mem'.\n")
