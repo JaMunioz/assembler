@@ -85,6 +85,8 @@ pos_jumps = []
 error_lines = []
 cond = 0
 error_type = []
+tobin = lambda x, count=8: "".join(map(lambda y:str((x>>y)&1),
+range(count-1, -1, -1)))
 
 f = open("input.ass","r") #Escribir en consola: "pip install ass" si necesita.
 lines = f.readlines()
@@ -93,14 +95,15 @@ lines = f.readlines()
 pos_arreglo = []
 arreglo_1 = []
 arreglo_2 = []
+esp = 0
 for i in range(len(lines)):
-    x = lines[i][:]
+    cx = lines[:]
     y = lines[i].split(":")
     if len(y) == 2 and y[1] != '\n':
+        esp = 1
         pos_arreglo.append(i)
         arreglo_1.append(y[0]+":\n")
         arreglo_2.append(" "+y[1])
-    lines[i] = x[:]
 pos_arreglo.reverse()
 arreglo_1.reverse()
 arreglo_2.reverse()
@@ -362,18 +365,27 @@ if len(error_lines) == 0:
     error = False
 
 if error == True:
-    error_lines.sort()
     print("\nEl documento '.ass' no esta bien formulado, a continuacion se "
-    "mostraran las lineas las cuales estan con errores tipo 'syntax', "
-    "indicandose el numero de linea y su respectivo contenido: ")
-    for i in range(len(error_lines)):
-        x = ""
-        for k in range(len(lines[error_lines[i]])):
-            x += str(lines[error_lines[i]][k])+" "
-        print(str(error_lines[i]+1)+": "+x+" ->",error_type[i])
+        "mostraran las lineas las cuales estan con errores tipo 'syntax', "
+        "indicandose el numero de linea y su respectivo contenido: ")
+    new_error_lines = []
+    error_lines.sort()
+    if esp == 1:
+        for i in error_lines:
+            new_delay = 0
+            for k in pos_arreglo:
+                if i > k:
+                    new_delay += 1
+            new_error_lines.append(i-new_delay)
+        for i in range(len(new_error_lines)):
+            print(str(new_error_lines[i]+1)+": "+cx[new_error_lines[i]][:-1]+" ->",error_type[i])
+    else:
+        for i in range(len(error_lines)):
+            x = ""
+            for k in range(len(lines[error_lines[i]])):
+                x += str(lines[error_lines[i]][k])+" "
+            print(str(error_lines[i]+1)+": "+x+" ->",error_type[i])
 else:
-    tobin = lambda x, count=8: "".join(map(lambda y:str((x>>y)&1),
-    range(count-1, -1, -1)))
     negative = 0
     ### MEM mem MEM mem MEM mem MEM mem MEM mem MEM mem MEM mem MEM mem MEM ###
     new_file=open("newfile.mem",mode="w",encoding="utf-8")
