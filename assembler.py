@@ -78,7 +78,7 @@ variables = {}
 instructions = []
 lines_data = -2
 lines_code = 0
-check = 1
+check = 0
 error = False
 jumps = []
 pos_jumps = []
@@ -86,10 +86,32 @@ error_lines = []
 cond = 0
 error_type = []
 
-f = open("p3F_1.ass","r") #Lectura del .ass  #p3F_1   p3F_2i 
+f = open("input.ass","r") #Escribir en consola: "pip install ass" si necesita.
 lines = f.readlines()
 
+#A continuacion, adaptacion de caso donde label, continua una instancia.
+pos_arreglo = []
+arreglo_1 = []
+arreglo_2 = []
+for i in range(len(lines)):
+    x = lines[i][:]
+    y = lines[i].split(":")
+    if len(y) == 2 and y[1] != '\n':
+        pos_arreglo.append(i)
+        arreglo_1.append(y[0]+":\n")
+        arreglo_2.append(" "+y[1])
+    lines[i] = x[:]
+pos_arreglo.reverse()
+arreglo_1.reverse()
+arreglo_2.reverse()
+for i in range(len(pos_arreglo)):
+    lines.pop(pos_arreglo[i])
+    lines.insert(pos_arreglo[i],arreglo_2[i])
+    lines.insert(pos_arreglo[i],arreglo_1[i])
+#hasta aqui llega el reparo de la v2.
+
 for i in range(len(lines)): #Limpiador de \n
+    registered = 0
     if check == 0:
         lines_data += 1
     else:
@@ -98,14 +120,19 @@ for i in range(len(lines)): #Limpiador de \n
     if lines[i][-1] != ":": #Quitar espacios innecesarios
         if lines[i][0] == " ":
             lines[i] = lines[i][2:]
+            limpiado = 1
+        else:
+            limpiado = 0
         lines[i] = lines[i].split(" ")
-        if len(lines[i]) == 1:
-            lines[i].append(0)
-        if len(lines[i]) != 2:
-            print(lines[i])
+        if len(lines[i]) == 1 and limpiado == 1:
+            lines[i].append("0")
+            val = 1
+        if len(lines[i]) != 2 and limpiado == 1:
             error = True
             error_lines.append(i) #si falta la existencia de un valor
-            error_type.append("Debe ir la instancia, junto al operador (ej: MOV A,B A es invalido, mientras que MOV A,B no lo es.)")
+            error_type.append("Esta linea tiene no tiene un largo de 2 despues" 
+            " de hacer el split. ej: MOV A,B; es valido, mientras que "
+            "MOV A, B; es inexistente debido a que esta mal escrito. ")
         else: 
             if lines[i][0] in opCodes: #checking the command.
                 n = opCodes[lines[i][0]] #checking jumps.
@@ -117,24 +144,40 @@ for i in range(len(lines)): #Limpiador de \n
                     pos_jumps.append(i)
                     try:
                         if k[0] == "#": #hexagesimal
-                            H = 1
                             if int(k[1:],16) > 255:
+                                H = 1
                                 error = True
                                 error_lines.append(i)
-                                error_type.append("El valor entregado en hexagesimal es mayor a 255 en decimal")
+                                error_type.append("Este numero hexagesimal, "
+                                "supera el valor de 255 en decimal, porfavor "
+                                "escriba nuevamente el valor destro del inter"
+                                "valo decimal menor a 255.")
                                 #Out of range in bits.
-
+                        elif k[0] == "-": #negativo
+                            if k[1] == "#": #hexagesimal
+                                if int(k[2:],16) > 255:
+                                    H = 1
+                                    error = True
+                                    error_lines.append(i)
+                                    error_type.append("Este numero hexagesimal"
+                                    ", supera el valor de 255 en decimal, "
+                                    " porfavor escriba nuevamente el valor "
+                                   "dentro del intervalo decimal menor a 255.")
+                                    #Out of range in bits.
                         else: #decimal
                             int(k)
                             if int(k) > 255:
                                 error = True
                                 error_lines.append(i)
-                                error_type.append("El numero en decimal no puede ser mayor a 255.")
+                                error_type.append("Este numero, es superior a"
+                                " 255, porfavor escriba un numero menor a este"
+                                " valor para que el assembly sea valido.")
                                 #Out of range in bits.
                     except:
                         error = True
-                        error_lines.append(i) #Valor acompañado del jump no existente.
-                        error_type.append("Se debe ingresar un valor decimal o hexagesimal, perteneciente al intervalo de [0,255]")
+                        error_lines.append(i)
+                        error_type.append("El label ingresado no existe.") 
+                        #Valor acompañado del jump no existente.
                 else:
                     #para el caso de los opcodes solo quedara lo de la derecha.
                     v1 = False
@@ -153,19 +196,50 @@ for i in range(len(lines)): #Limpiador de \n
                         if k not in variables and k != "A" and k != "B":
                             try:
                                 if k[0] == "#": #hexagesimal
-                                    H = 1
                                     if int(k[1:],16) > 255:
+                                        H = 1
                                         error = True
                                         error_lines.append(i)
-                                        ("El valor entregado en hexagesimal supera el es mayor a 255 en decimal")
+                                        error_type.append("Este numero hexages"
+                                        "imal, supera el valor de 255 en "
+                                        "decimal, porfavor escriba nuevamente"
+                                        " el valor destro del inter"
+                                        "valo decimal menor a 255.")
                                         #Out of range in bits.
-
+                                    if v1 == True and p==0:
+                                        y += "(Dir)"
+                                        v1 = False
+                                    elif v2 == True and p==1:
+                                        y += "(Dir)"
+                                    else:
+                                        y += "Lit"
+                                elif k[0] == "-" and k[1] == "#":#neg and hex.
+                                    if int(k[2:],16) > 255:
+                                        H = 1
+                                        error = True
+                                        error_lines.append(i)
+                                        error_type.append("Este numero hexages"
+                                        "imal, supera el valor de 255 en "
+                                        "decimal, porfavor escriba nuevamente"
+                                        " el valor destro del inter"
+                                        "valo decimal menor a 255.")
+                                        #Out of range in bits.
+                                    if v1 == True and p==0:
+                                        y += "(Dir)"
+                                        v1 = False
+                                    elif v2 == True and p==1:
+                                        y += "(Dir)"
+                                    else:
+                                        y += "Lit"
                                 else: #decimal
                                     int(k)
                                     if int(k) > 255:
                                         error = True
                                         error_lines.append(i)
-                                        error_type.append("El numero en decimal no puede ser mayor a 255.")
+                                        error_type.append("Este numero, es "
+                                        "superior a 255, porfavor escriba un"
+                                        " numero menor a este valor para que"
+                                        " el assembly sea valido.")
                                         #Out of range in bits.
 
                                     if v1 == True and p==0:
@@ -178,7 +252,9 @@ for i in range(len(lines)): #Limpiador de \n
                             except:
                                 error = True
                                 error_lines.append(i) #Variable no existente.
-                                error_type.append("Se esta intentando utilizar una variable no existente.")
+                                error_type.append("La variable ingresada no "
+                                "existe.")
+                                registered = 1
                         else:
                             if k == "A" or k == "B":
                                 if v1 == True and p == 0:
@@ -196,31 +272,55 @@ for i in range(len(lines)): #Limpiador de \n
                                     y += "Lit"
                         p += 1
                     x = 0
-                    exec("if "+'"'+str(y)+'"'+" in "+str(lines[i][0])+":\n    x = 1")
-                    if x == 0 and H == 0:
-                        error = True
-                        error_lines.append(i) #Existe la instrucion, pero no su llave.
-                        error_type.append("Existe la instacia, pero no su operador. (ej: MOV A,A,A existiendo MOV, pero no el A,A,A).")
+                    exec("if "+'"'+str(y)+'"'+" in "+str(lines[i][0])+
+                    ":\n    x = 1")
+                    if x == 0 and registered == 0:
+                        if H != 1:
+                            error = True
+                            error_lines.append(i) 
+                            error_type.append("Existe la instancia, pero no el"
+                            " operador.")
+                            #Existe la instrucion, pero no su llave.
             else:
                 if check == 1: #Se esta analizando codigo despues de 'CODE:'
-                    error = True
-                    error_lines.append(i) #Opcode inexistente.
-                    error_type.append("No existe la instacia: "+str(lines[i][0])+".")
+                    if limpiado == 1:
+                        error = True
+                        error_lines.append(i) #Opcode inexistente.
+                        error_type.append("No existe la instacia.")
+                    else:
+                        error = True
+                        error_lines.append(i) #Opcode inexistente.
+                        error_type.append("El label esta mal escrito.")
                 else: #variables
                     variables[lines[i][0]] = i 
-                    try:
+                    try: #detecta decimales negativos y positivos.
                         int(lines[i][1])
                     except:
-                        if lines[i][1][0] == "#": 
+                        if lines[i][1][0] == "#": #caso positivo.
                             for k in range(1,len(lines[i][1])):
                                 if lines[i][1][k] == "#":
                                     error = True
-                                    #añade si esta mal escrito el hexagecimal.
                                     error_lines.append(i)
-                        else:
+                                    error_type.append("Si esta tratando de "
+                                    "escribir un hexagesimal, solo ponga un "
+                                    "'#' antes del valor.")
+                                    #añade si esta mal escrito el hexagecimal.
+                        elif lines[i][1][0] == "-": #caso negativo.
+                            if lines[i][1][1] == "#": 
+                                for k in range(2,len(lines[i][1])):
+                                    if lines[i][1][k] == "#":
+                                        error = True
+                                        error_lines.append(i)
+                                        error_type.append("Si esta tratando de"
+                                        " escribir un hexagesimal, solo ponga "
+                                        "un '#' antes del valor.")
+                                    #añade si esta mal escrito el hexagecimal.
+                        else: #no es ni decimal, ni hexagesimal.
                             error = True
-                            #simplemente hay un simbolo extraño.
                             error_lines.append(i)
+                            error_type.append("Hay un valor no valido, "
+                            "ingrese un decimal, o hexagesimal.")
+                            #simplemente hay un simbolo extraño.
 
     else: 
         if i != 0 and cond == 0: #identificar posicion del "CODE".
@@ -238,21 +338,28 @@ for i in range(len(lines)): #Limpiador de \n
         if len(lines[i]) != 1:
             error = True
             error_lines.append(i)
+            error_type.append("Linea mal escrita, revisar.")
         lines[i] = word #Volviendo a formato de string.
 
 if lines[0] == "DATA:":
     check += 1
 
-#if check != 2:
-    #error = True
+if check != 2:
+    error = True
+    error_lines.append("Extra:")
+    error_type.append("No se ingreso, 'DATA:' o 'CODE:', revisar.")
 
-"""
-#revisar los jumps.
-for i in range(len(jumps)):  #Existe pos para indicar la linea con error.
-    if jumps[i] not in labels:
-        error = True
-        error_lines.append(pos_jumps[i])
-"""
+remover = [] #Elimina los labels que realmente si existen.
+re = 0
+for i in error_lines:
+    if lines[i][0] in opCodes and (lines[i][1]+":") in labels:
+        remover.append(re)
+    re += 1
+remover.reverse()
+for i in remover:
+    error_lines.pop(i)
+if len(error_lines) == 0:
+    error = False
 
 if error == True:
     error_lines.sort()
@@ -263,18 +370,32 @@ if error == True:
         x = ""
         for k in range(len(lines[error_lines[i]])):
             x += str(lines[error_lines[i]][k])+" "
-        print(str(error_lines[i]+1)+": "+x,error_type[i])
+        print(str(error_lines[i]+1)+": "+x+" ->",error_type[i])
 else:
+    tobin = lambda x, count=8: "".join(map(lambda y:str((x>>y)&1),
+    range(count-1, -1, -1)))
+    negative = 0
     ### MEM mem MEM mem MEM mem MEM mem MEM mem MEM mem MEM mem MEM mem MEM ###
     new_file=open("newfile.mem",mode="w",encoding="utf-8")
     ks = list(variables.keys())
     for k in ks:
+        if lines[variables[k]][1][0] == "-":
+            negative = 1
+        else:
+            negative = 0
         try: #Si es decimal en DATA:
             x = int(lines[variables[k]][1])
-            x = (str(bin(x)))[2:]
+            if negative == 1:
+                x = tobin(int(lines[variables[k]][1]))
+            else:
+                x = (str(bin(x)))[2:]
         except: #Si es hexagesimal en DATA:
-            x = int(lines[variables[k]][1][1:],16)
-            x = (str(bin(x)))[2:]
+            if negative == 1:
+                x = int(lines[variables[k]][1][2:],16)
+                x = tobin(-x)
+            else:
+                x = int(lines[variables[k]][1][1:],16)
+                x = (str(bin(x)))[2:]
         while len(x) < 8:
             x = "0" + x
         new_file.write(x+"\n")
@@ -292,13 +413,23 @@ else:
         or a[i] == "JOV"):
             y = x[0].replace("(","").replace(")","")
             lit = ""
+            if y[0] == "-":
+                negative = 1
+            else:
+                negative = 0
             try: #si es un decimal en los jumps:
                 int(y)
-                lit = (str(bin(int(y))))[2:]
+                if negative == 1:
+                    lit = tobin(int(y))
+                else:
+                    lit = (str(bin(int(y))))[2:]
             except:
                 if y[0] == "#": #si es hexagesimal en los jumps:
                     y = int(y[1:],16)
                     lit = (str(bin(int(y))))[2:]
+                elif negative == 1:
+                    y = int(y[2:],16)
+                    lit = tobin(-y)
                 else: #posicion de los labels para los jumps:
                     lit = code_jumps[y+":"] 
                     lit = (str(bin(lit)))[2:]
@@ -334,12 +465,25 @@ else:
                         while len(lit) < 8:
                             lit = "0" + lit
                         c.append(lit)
-                    else: #si es decimal en CODE:
-                        int(y)
-                        lit = (str(bin(int(y))))[2:]
+                    elif y[0] == "-" and y[1] == "#":
+                        #si es negativo y es hexagesimal en CODE:
+                        y = int(y[2:],16)
+                        lit = tobin(-y)
                         while len(lit) < 8:
                             lit = "0" + lit
                         c.append(lit)
+                    else: #si es decimal en CODE:
+                        int(y)
+                        if y[0] == "-":
+                            lit = tobin(int(y))
+                            while len(lit) < 8:
+                                lit = "0" + lit
+                            c.append(lit)
+                        else:
+                            lit = (str(bin(int(y))))[2:]
+                            while len(lit) < 8:
+                                lit = "0" + lit
+                            c.append(lit)
                 except:
                     lit = (str(bin(int(variables[y])-1)))[2:]
                     while len(lit) < 8:
@@ -353,12 +497,11 @@ else:
             y += k+","
         y = y[:-1]
         b.append(y)
-    
     new_file=open("newfile.out",mode="w",encoding="utf-8")
     for i in range(len(a)):
         exec("x = "+str(a[i])+"["+'"'+str(b[i])+'"'+"]")
         new_file.write(x+c[i]+"\n")
     new_file.close()
-    print("La cantidad de lineas de 'DATA' son: "+str(0))
+    print("La cantidad de lineas de 'DATA' son: "+str(lines_data))
     print("La cantidad de lineas de 'CODE' son: "+str(lines_code))
     print("Se han generado 'newfile.out' y 'newfile.mem'.\n")
