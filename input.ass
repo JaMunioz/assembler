@@ -15,8 +15,7 @@ L1:
   JNE L2
   INC (t)
   JMP L3
-L2:
-  MOV B,(j)
+L2: MOV B,(j)
   ADD B,(c)
   MOV A,(t)
   MOV (B),A
@@ -30,8 +29,7 @@ L2:
   INC (t)
   INC (j)
   INC (j)
-L3:
-  INC (i)
+L3: INC (i)
   MOV A,(n)
   CMP A,(i)
   JGT L1
