@@ -1,0 +1,181 @@
+DATA:
+  n 10
+  c 12
+  i 0
+  j 0
+  t 0
+  a 0
+CODE:
+  MOV A,(0)     ;A = 2  de 0x00.
+  MOV (a),A     ;a = 2.
+L1: MOV B,(i)   ;B = 0.
+  MOV A,(B)     ;A = 2 de 0x00.
+  CMP A,(a)     
+  JNE L2        ;si A != (a), es decir 2 != 2, asi que no saltara.
+  INC (t)       ;t = 1.
+  JMP L3        ;Salto.
+L3: INC (i)     ;i = 1.
+  MOV A,(n)     ;A = 10.
+  CMP A,(i)     
+  JGT L1        ;si A > (i), es decir 10 > 1, asi que saltara.
+  JEQ L2        ;No se ejecuto.
+L1: MOV B,(i)   ;B = 1.
+  MOV A,(B)     ;A = 2 de 0x01.
+  CMP A,(a)     
+  JNE L2        ;si A != (a), es decir 2 != 2, asi que no saltara.
+  INC (t)       ;t = 2.
+  JMP L3        ;Salto.
+L3: INC (i)     ;i = 2.
+  MOV A,(n)     ;A = 10.
+  CMP A,(i)     
+  JGT L1        ;si A > (i), es decir 10 > 2, asi que saltara.
+  JEQ L2        ;No se ejecuto.
+L1: MOV B,(i)   ;B = 2.
+  MOV A,(B)     ;A = 2 de 0x02.
+  CMP A,(a)     
+  JNE L2        ;si A != (a), es decir 2 != 2, asi que no saltara.
+  INC (t)       ;t = 3.
+  JMP L3        ;Salto.
+L3: INC (i)     ;i = 3.
+  MOV A,(n)     ;A = 10.
+  CMP A,(i)     
+  JGT L1        ;si A > (i), es decir 10 > 3, asi que saltara.
+  JEQ L2        ;No se ejecuto.
+L1: MOV B,(i)   ;B = 3.
+  MOV A,(B)     ;A = 1 de 0x03.
+  CMP A,(a)     
+  JNE L2        ;si A != (a), es decir 1 != 2, asi que saltara.
+  INC (t)       ;No se ejecuto
+  JMP L3        ;No se ejecuto
+L2: MOV B,(j)   ;B = 0.
+  ADD B,(c)     ;B = 0 + 12, B = 12.
+  MOV A,(t)     ;A = 3.
+  MOV (B),A     ;la direccion 0x0C, tendra el valor de 0x03.
+  INC B         ;B = B+1, B = 13.
+  MOV A, (a)    ;A = 2.
+  MOV (B),A     ;la direccion 0x0D, tendra el valor de 0x02.
+  MOV B,(i)     ;B = 3.
+  MOV A,(B)     ;A = 1 de 0x03.
+  MOV (a),A     ;a = 1.
+  RST (t)       ;t = 0.
+  INC (t)       ;t = 1.
+  INC (j)       ;j = 1.
+  INC (j)       ;j = 2.
+L3: INC (i)     ;i = 4.
+  MOV A,(n)     ;A = 10.
+  CMP A,(i)     
+  JGT L1        ;si A > (i), es decir 10 > 4, asi que saltara.
+  JEQ L2        ;No se ejecuto.
+L1: MOV B,(i)   ;B = 4.
+  MOV A,(B)     ;A = 1 de 0x04.
+  CMP A,(a)     
+  JNE L2        ;si A != (a), es decir 1 != 1, asi que no saltara.
+  INC (t)       ;t = 2.
+  JMP L3        ;Salto.
+L3: INC (i)     ;i = 5.
+  MOV A,(n)     ;A = 10.
+  CMP A,(i)     
+  JGT L1        ;si A > (i), es decir 10 > 5, asi que saltara.
+  JEQ L2        ;No se ejecuto.
+L1: MOV B,(i)   ;B = 5.
+  MOV A,(B)     ;A = 2 de 0x05.
+  CMP A,(a)     
+  JNE L2        ;si A != (a), es decir 2 != 1, asi que saltara.
+  INC (t)       ;No se ejecuto.
+  JMP L3        ;No se ejecuto.
+L2: MOV B,(j)   ;B = 2.
+  ADD B,(c)     ;B = 2 + 12, B = 14.
+  MOV A,(t)     ;A = 2.
+  MOV (B),A     ;la direccion 0x0E, tendra el valor de 0x02.
+  INC B         ;B = B+1, B = 15.
+  MOV A, (a)    ;A = 1.
+  MOV (B),A     ;la direccion 0x0F, tendra el valor de 0x01.
+  MOV B,(i)     ;B = 5.
+  MOV A,(B)     ;A = 2 de 0x05.
+  MOV (a),A     ;a = 2.
+  RST (t)       ;t = 0.
+  INC (t)       ;t = 1.
+  INC (j)       ;j = 3.
+  INC (j)       ;j = 4.
+L3: INC (i)     ;i = 6.
+  MOV A,(n)     ;A = 10.
+  CMP A,(i)     
+  JGT L1        ;si A > (i), es decir 10 > 6, asi que saltara.
+  JEQ L2        ;No se ejecuto.
+L1: MOV B,(i)   ;B = 6.
+  MOV A,(B)     ;A = 2 de 0x06.
+  CMP A,(a)     
+  JNE L2        ;si A != (a), es decir 2 != 2, asi que no saltara.
+  INC (t)       ;t = 2.
+  JMP L3        ;Salto.
+L3: INC (i)     ;i = 7.
+  MOV A,(n)     ;A = 10.
+  CMP A,(i)     
+  JGT L1        ;si A > (i), es decir 10 > 7, asi que saltara.
+  JEQ L2        ;No se ejecuto.
+L1: MOV B,(i)   ;B = 7.
+  MOV A,(B)     ;A = 2 de 0x07.
+  CMP A,(a)     
+  JNE L2        ;si A != (a), es decir 2 != 2, asi que no saltara.
+  INC (t)       ;t = 3.
+  JMP L3        ;Salto.
+L3: INC (i)     ;i = 8.
+  MOV A,(n)     ;A = 10.
+  CMP A,(i)     
+  JGT L1        ;si A > (i), es decir 10 > 8, asi que saltara.
+  JEQ L2        ;No se ejecuto.
+L1: MOV B,(i)   ;B = 8.
+  MOV A,(B)     ;A = 2 de 0x08.
+  CMP A,(a)
+  JNE L2        ;si A != (a), es decir 2 != 2, asi que no saltara.
+  INC (t)       ;t = 4.
+  JMP L3        ;Salto.
+L3: INC (i)     ;i = 9.
+  MOV A,(n)     ;A = 10.
+  CMP A,(i)     
+  JGT L1        ;si A > (i), es decir 10 > 9, asi que saltara.
+  JEQ L2        ;No se ejecuto.
+L1: MOV B,(i)   ;B = 9.
+  MOV A,(B)     ;A = 5 de 0x09.
+  CMP A,(a)
+  JNE L2        ;si A != (a), es decir 5 != 2, asi que saltara.
+  INC (t)       ;No se ejecuto.
+  JMP L3        ;No se ejecuto.
+L2: MOV B,(j)   ;B = 4.
+  ADD B,(c)     ;B = 4 + 12, B = 16.
+  MOV A,(t)     ;A = 4.
+  MOV (B),A     ;la direccion 0x10, tendra el valor de 0x04.
+  INC B         ;B = B+1, B = 17.
+  MOV A, (a)    ;A = 2.
+  MOV (B),A     ;la direccion 0x11, tendra el valor de 0x02.
+  MOV B,(i)     ;B = 9.
+  MOV A,(B)     ;A = 5 de 0x09.
+  MOV (a),A     ;a = 5.
+  RST (t)       ;t = 0.
+  INC (t)       ;t = 1.
+  INC (j)       ;j = 5.
+  INC (j)       ;j = 6.
+L3: INC (i)     ;i = 10.
+  MOV A,(n)     ;A = 10.
+  CMP A,(i)     
+  JGT L1        ;si A > (i), es decir 10 > 10, asi que no saltara.
+  JEQ L2        ;si A == (i), es decir 10 == 10, asi que saltara.
+L2: MOV B,(j)   ;B = 6.
+  ADD B,(c)     ;B = 6 + 12, B = 18.
+  MOV A,(t)     ;A = 1.
+  MOV (B),A     ;la direccion 0x12, tendra el valor de 0x01.
+  INC B         ;B = B+1, B = 19.
+  MOV A, (a)    ;A = 5.
+  MOV (B),A     ;la direccion 0x13, tendra el valor de 0x05.
+  MOV B,(i)     ;B = 10.
+  MOV A,(B)     ;A = 8 de 0x0A.
+  MOV (a),A     ;a = 8.
+  RST (t)       ;t = 0.
+  INC (t)       ;t = 1.
+  INC (j)       ;j = 7.
+  INC (j)       ;j = 8.
+L3: INC (i)     ;i = 11.
+  MOV A,(n)     ;A = 10.
+  CMP A,(i)     
+  JGT L1        ;si A > (i), es decir 10 > 11, asi que no saltara.
+  JEQ L2        ;si A > (i), es decir 10 == 11, asi que no saltara.

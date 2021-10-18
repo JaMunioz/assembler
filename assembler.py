@@ -87,10 +87,8 @@ cond = 0
 error_type = []
 tobin = lambda x, count=8: "".join(map(lambda y:str((x>>y)&1),
 range(count-1, -1, -1)))
-
 f = open("input.ass","r") #Escribir en consola: "pip install ass" si necesita.
 lines = f.readlines()
-
 #A continuacion, adaptacion de caso donde label, continua una instancia.
 pos_arreglo = []
 arreglo_1 = []
@@ -100,6 +98,7 @@ for i in range(len(lines)):
     cx = lines[:]
     y = lines[i].split(":")
     if len(y) == 2 and y[1] != '\n':
+        lines_code -= 1
         esp = 1
         pos_arreglo.append(i)
         arreglo_1.append(y[0]+":\n")
@@ -112,7 +111,6 @@ for i in range(len(pos_arreglo)):
     lines.insert(pos_arreglo[i],arreglo_2[i])
     lines.insert(pos_arreglo[i],arreglo_1[i])
 #hasta aqui llega el reparo de la v2.
-
 for i in range(len(lines)): #Limpiador de \n
     registered = 0
     if check == 0:
@@ -324,7 +322,6 @@ for i in range(len(lines)): #Limpiador de \n
                             error_type.append("Hay un valor no valido, "
                             "ingrese un decimal, o hexagesimal.")
                             #simplemente hay un simbolo extraño.
-
     else: 
         if i != 0 and cond == 0: #identificar posicion del "CODE".
             check = 1
@@ -343,15 +340,12 @@ for i in range(len(lines)): #Limpiador de \n
             error_lines.append(i)
             error_type.append("Linea mal escrita, revisar.")
         lines[i] = word #Volviendo a formato de string.
-
 if lines[0] == "DATA:":
     check += 1
-
 if check != 2:
     error = True
     error_lines.append("Extra:")
     error_type.append("No se ingreso, 'DATA:' o 'CODE:', revisar.")
-
 remover = [] #Elimina los labels que realmente si existen.
 re = 0
 for i in error_lines:
@@ -363,7 +357,6 @@ for i in remover:
     error_lines.pop(i)
 if len(error_lines) == 0:
     error = False
-
 if error == True:
     print("\nEl documento '.ass' no esta bien formulado, a continuacion se "
         "mostraran las lineas las cuales estan con errores tipo 'syntax', "
@@ -378,7 +371,8 @@ if error == True:
                     new_delay += 1
             new_error_lines.append(i-new_delay)
         for i in range(len(new_error_lines)):
-            print(str(new_error_lines[i]+1)+": "+cx[new_error_lines[i]][:-1]+" ->",error_type[i])
+            print(str(new_error_lines[i]+1)+": "+cx[new_error_lines[i]][:-1]+
+            " ->",error_type[i])
     else:
         for i in range(len(error_lines)):
             x = ""
@@ -412,7 +406,6 @@ else:
             x = "0" + x
         new_file.write(x+"\n")
     new_file.close()
-
     #OUT out OUT out OUT out OUT out OUT out OUT out OUT out OUT out OUT out###
     a = [] #inst
     b = [] #oper
@@ -502,8 +495,7 @@ else:
                         lit = "0" + lit
                     c.append(lit)
             else:
-                c.append("00000000") ##seguir aqui
-        
+                c.append("00000000") ##seguir aqui 
         y = ""
         for k in x:
             y += k+","

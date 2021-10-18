@@ -1,0 +1,25 @@
+DATA:
+  numero            ;se debe ingresar el numero a evaluar.
+  n 0               ;cantidad de unos, en el numero.
+  largo 8           ;largo del numero en bits.
+CODE:
+inicio:
+  MOV A,(numero)    ;A = numero.
+  MOV B,(numero)    ;B = numero.
+  SHR B,B           ;B = numero, pero con shif left.
+  MOV (numero),B    ;numero = B.
+  AND A,1           ;con esto determino si el bit mas de la derecha es 1, o no.
+  CMP A,1           
+  JEQ sumarAn       ;Si A == 1, es decir que el bit mas de la derecha era 1.
+  JMP fin           ;Evita el contador de unos.
+sumarAn:
+  MOV B,(n)         ;Se mueve el valor de n a b.
+  INC B             ;B = B+1.
+  MOV (n),B         ;Se guarda B en n.
+fin:
+  MOV B,(largo)     ;Se mueve a B, el valor de largo.
+  SUB B,1           ;B = B-1.
+  MOV (largo),B     ;Se guarda en largo el valor de B.
+  CMP B,0       
+  JGT inicio        ;Si B>0 se volvera a comenzar, sino termina.
+

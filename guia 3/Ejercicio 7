@@ -1,0 +1,32 @@
+DATA:
+  v1 #2
+  v2 #0
+CODE:
+  MOV A,(v1)    ;A = #2.
+  INC B         ;B = 1.
+  ADD A,B       ;A = #3.
+  MOV (v2),A    ;v2 = #3.
+  AND A,1       ;11 and 01 -> 01, entonces A = 01.
+  MOV B,(v1)    ;B = #2.
+  CMP A,0
+  JEQ #0A       ;Si A == 0 saltara a la linea 10 de codigo (linea 14), como A = #3, no salta. 
+  SUB B,1       ;B = #1.
+  MOV (v1),B    ;v1 = #1.
+  MOV A,(v2)    ;A = #3.
+  CMP B,0       
+  JGT 1         ;Si B > 0 salta a la linea 1 de codigo (linea 5), termina por saltar, haciendo todo denuevo.
+
+despues del salto..
+  MOV A,(v1)    ;A = #1.
+  INC B         ;B = #2.
+  ADD A,B       ;A = #3.
+  MOV (v2),A    ;v2 = #3.
+  AND A,1       ;11 and 01 -> 01, entonces A = 01.
+  MOV B,(v1)    ;B = #1.
+  CMP A,0
+  JEQ #0A       ;Si A == 0 saltara a la linea 10 de codigo (linea 14), como A = #3, no salta. 
+  SUB B,1       ;B = #0.
+  MOV (v1),B    ;v1 = #0.
+  MOV A,(v2)    ;A = #3.
+  CMP B,0
+  JGT 1         ;Si B > 0 salta a la linea 1 de codigo (linea 5), como B = 0, no salta, y termina.

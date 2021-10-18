@@ -1,0 +1,33 @@
+DATA:
+  x 3
+  y 3
+  r
+  aux
+CODE:
+  MOV A,0
+  MOV B,(x)
+  MOV (aux),B
+inicio:
+  ADD A,B
+  SUB B,1
+  MOV (y),B
+iniciomult:
+  MOV B,(aux)
+  SUB B,1
+  MOV (r),B
+multiplicar:
+  MOV B,(x)
+  ADD A,B
+  MOV B,(r)
+  SUB B,1
+  MOV (r),B
+  CMP B,0
+  JEQ procesar
+  JMP multiplicar
+procesar:
+  MOV (x),A
+  MOV B,(y)
+  SUB B,1
+  MOV (y),B
+  CMP B,0
+  JGT iniciomult

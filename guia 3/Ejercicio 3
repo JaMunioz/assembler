@@ -1,0 +1,20 @@
+DATA:
+  inicio #A0
+  len 5
+CODE:
+inicio:
+  MOV A,0           ;Comienza el valor en 0.
+sumar:
+  MOV B,(inicio)    ;Mueve el valor de la direccion de inicio a B.
+  MOV B,(B)         ;Se carga el valor de la direccion a B.
+  ADD A,B           ;A = A+B
+  MOV B,(inicio)    ;Mueve el valor de la direccion de inicio a B.
+  INC B             ;B = B+1
+  MOV (inicio),B    ;Cargo en inicio el valor de B.
+  MOV B,(len)       ;Se mueve el valor de len a B.
+  SUB B,1           ;B = B-1
+  CMP B,0           
+  JEQ fin           ;Si B == 0: termina
+  MOV (len),B       ;Se guarda en len el valor de B.
+  JMP sumar
+fin:

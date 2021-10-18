@@ -1,0 +1,68 @@
+DATA:
+  lista
+  largo
+  dirmenor
+  menor
+  actual
+  siguiente
+  contador
+  contador_movidas
+CODE:
+  MOV B,(lista)
+  MOV (actual),B
+  MOV A,(B)
+  INC B
+  MOV (siguiente),B
+  MOV B,(B)
+  CMP A,B
+  JGT MAYOR
+  MOV B,(actual)
+  MOV (dirmenor),B
+  MOV B,(B)
+  MOV (menor),B
+  MOV B,(actual)
+  MOV B,(B)
+  INC B
+  MOV (actual),B
+  JMP LOOP
+MAYOR:
+  MOV B,(siguiente)
+  MOV (dirmenor),B
+  MOV B,(B)
+  MOV (menor),B
+  MOV B,(lista)
+  MOV (actual),B
+  JMP LOOP
+LOOP:
+  MOV A,(menor)
+  MOV B,(actual)
+  MOV B,(B)
+  CMP A,B
+  JGT MAYOR
+  MOV B,(actual)
+  INC B
+  MOV (actual),B
+  MOV (siguiente),B
+  MOV B,(contador)
+  INC B
+  MOV (contador),B
+  CMP B,(largo)
+  JEQ ORDENADOS
+  JMP LOOP
+ORDENADOS:
+  MOV B,(lista)
+  MOV B,(B)
+  MOV (valaux),B
+  MOV A,(menor)
+  MOV (lista),A
+  MOV B,(menor)
+  MOV (dirmenor),B
+  INC lista
+  MOV B,(contador_movidas)
+  INC B
+  MOV (contador_movidas),B
+  CMP B,(largo)
+  JEQ FINAL
+  JMP LOOP
+FINAL:
+  MOV B,(lista)

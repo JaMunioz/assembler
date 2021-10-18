@@ -1,0 +1,124 @@
+DATA:
+  inicio 0
+  cols 0
+  filas 0
+  aux 0
+  largo 0
+  counter 0
+  mayor 0
+  actual 0
+  pushcount 0
+  contadorelementos 0
+  rojo 0
+  verde 0
+  azul 0
+  ciclos 0
+  pixel 0
+CODE:
+  MOV B,(inicio)
+  MOV (actual),B
+  MOV B,(cols)
+  MOV (aux),B
+  MOV B,(filas)
+  SUB B,2
+  MOV (filas),B
+SUMA:
+  MOV B,(aux)
+  MOV A,B
+  ADD A,(cols)
+  MOV (largo),A
+  MOV B,(counter)
+  INC B
+  CMP B,(filas)
+  JLE SUMA
+  CMP B,(filas)
+  JEQ LOOP
+LOOP:
+  MOV B,(actual)
+  MOV B,(B)
+  CMP B,(mayor)
+  JGT CAMBIO
+  CMP B,(mayor)
+  JGE IGUALES
+  MOV B,(actual)
+  INC B
+  MOV (actual),B
+  MOV B,(pixel)
+  INC B
+  MOV (pixel),B
+  CMP B,3
+  JEQ COMPARADOR
+  JMP LOOP
+CAMBIO:
+  MOV (mayor),B
+  MOV B,(pushcount)
+  INC B
+  MOV (pushcount),B
+  MOV B,(actual)
+  INC B
+  MOV (actual),B
+  MOV B,(pixel)
+  PUSH B
+  INC B
+  MOV (pixel),B
+  CMP B,3
+  JEQ COMPARADOR
+  JMP LOOP
+IGUALES:
+  MOV B,(pushcount)
+  INC B
+  MOV (pushcount),B
+  MOV B,(pixel)
+  PUSH B
+  INC B
+  MOV (pixel),B
+  CMP B,3
+  JEQ COMPARADOR
+  JMP LOOP
+COMPARADOR:
+  POP B
+  CMP B,0
+  JEQ ROJO
+  CMP B,1
+  JEQ AZUL
+  CMP B,2
+  JEQ VERDE
+ROJO:
+  MOV B,(rojo)
+  MOV B,(B)
+  INC B
+  MOV (rojo),B
+  MOV B,(ciclos)
+  INC B
+  MOV (ciclos),B
+  JMP CICLOSPUSH
+VERDE:
+  MOV B,(verde)
+  INC B
+  MOV (verde),B
+  MOV B,(ciclos)
+  INC B
+  MOV (ciclos),B
+  JMP CICLOSPUSH
+AZUL:
+  MOV B,(azul)
+  INC B
+  MOV (azul),B
+  MOV B,(ciclos)
+  INC B
+  MOV (ciclos),B
+  JMP CICLOSPUSH
+CICLOSPUSH:
+  CMP B,(pushcount)
+  JEQ CASIFINAL
+  JMP COMPARADOR
+CASIFINAL:
+  RST (pixel)
+  MOV B,(contadorelementos)
+  INC B 
+  MOV (contadorelementos),B
+  CMP B,(largo)
+  JEQ FINAL
+  JMP LOOP
+FINAL:
+  MOV A,(rojo)

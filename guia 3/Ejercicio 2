@@ -1,0 +1,6 @@
+MOV B,12    ;B = 12
+INC (B)     ;A la direccion de memoria 12, se le incrementa en 1 a su valor.
+INC B       ;B = 13.
+OR A,2      ;00b or 10b -> 10b, A = 10b -> A = 2.
+ADD A,(B)   ;A = A+ valor de la direccion de B, ahora como B fue simando en 1, no hay valor dentro, por lo que se asume 0.
+SHL A,A     ;shif left de 2 -> 010b a 100b -> A = 4.

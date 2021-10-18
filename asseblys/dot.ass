@@ -1,0 +1,42 @@
+DATA:
+  lista1
+  lista2
+  largo
+  counter
+  mult 0
+  temp 0
+  aux1
+  aux2
+  res 0
+CODE:
+LOOP:
+  MOV B,(lista1)
+  MOV A,(B)
+  MOV B,(lista2)
+  MOV B,(B)
+  MOV (aux1),A
+  SUB B,2
+  MOV (aux2),B
+SUMA:
+  ADD A,(aux1)
+  MOV (mult),A
+  MOV B,(counter)
+  INC B
+  CMP B,(aux2)
+  JLE SUMA:
+  CMP B,(aux2)
+  JGT SIGUIENTE
+SIGUIENTE:
+  MOV A,(temp)
+  MOV B,(mult)
+  ADD A,B
+  MOV (res),A
+  MOV B,(counter)
+  INC B
+  CMP B,(largo)
+  JEQ FINAL:
+  INC lista1
+  INC lista2
+  JMP LOOP
+FINAL:
+  MOV A,(res)
