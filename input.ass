@@ -1,36 +1,20 @@
 DATA:
-  n 10
-  c 12
-  i 0
-  j 0
-  t 0
-  a 0
+  lista #A0
+  n 5
+  res
+  aux 0
 CODE:
+  CMP 1,0
+  JEQ #0E
+  MOV (0),A
+  MOV (1),B
+  MOV A,B
+  MIV B,A
   MOV A,(0)
-  MOV (a),A
-L1:
-  MOV B,(i)
-  MOV A,(B)
-  CMP A,(a)
-  JNE L2
-  INC (t)
-  JMP L3
-L2: MOV B,(j)
-  ADD B,(c)
-  MOV A,(t)
-  MOV (B),A
-  INC B
-  MOV A,(a)
-  MOV (B),A
-  MOV B,(i)
-  MOV A,(B)
-  MOV (a),A
-  RST (t)
-  INC (t)
-  INC (j)
-  INC (j)
-L3: INC (i)
-  MOV A,(n)
-  CMP A,(i)
-  JGT L1
-  JEQ L2
+  SUB A,1
+  JEL #0D
+  MOV (0),A
+  MOV A,B
+  ADD (1),B
+  JMP #05
+  MOV A,B

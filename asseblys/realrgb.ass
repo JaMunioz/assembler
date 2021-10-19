@@ -115,7 +115,7 @@ CICLOSPUSH:
 CASIFINAL:
   RST (pixel)
   MOV B,(contadorelementos)
-  INC B 
+  INC B
   MOV (contadorelementos),B
   CMP B,(largo)
   JEQ FINAL

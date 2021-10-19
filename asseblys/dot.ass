@@ -23,7 +23,7 @@ SUMA:
   MOV B,(counter)
   INC B
   CMP B,(aux2)
-  JLE SUMA:
+  JLE SUMA
   CMP B,(aux2)
   JGT SIGUIENTE
 SIGUIENTE:
@@ -34,9 +34,9 @@ SIGUIENTE:
   MOV B,(counter)
   INC B
   CMP B,(largo)
-  JEQ FINAL:
-  INC lista1
-  INC lista2
+  JEQ FINAL
+  INC (lista1)
+  INC (lista2)
   JMP LOOP
 FINAL:
   MOV A,(res)

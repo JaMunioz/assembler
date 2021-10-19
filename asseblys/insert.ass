@@ -7,6 +7,7 @@ DATA:
   siguiente
   contador
   contador_movidas
+  valaux
 CODE:
   MOV B,(lista)
   MOV (actual),B
@@ -57,7 +58,7 @@ ORDENADOS:
   MOV (lista),A
   MOV B,(menor)
   MOV (dirmenor),B
-  INC lista
+  INC (lista)
   MOV B,(contador_movidas)
   INC B
   MOV (contador_movidas),B

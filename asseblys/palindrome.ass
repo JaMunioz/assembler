@@ -1,0 +1,37 @@
+DATA:
+  inicio #A0
+  res 1
+  largo 2
+  contador 0
+  inverso 0
+  aux1 0
+CODE:
+  MOV B,(inicio)
+  MOV (contador),B
+  MOV A,(largo)
+  ADD A,B
+  MOV (inverso),A
+LOOP:
+  MOV B,(contador)
+  MOV A,(B)
+  MOV B,(inverso)
+  MOV B,(B)
+  CMP A,B
+  JEQ VERDADERO
+  MOV B,(res)
+  INC B
+  MOV (res),B
+  CMP B,0
+  JEQ FINAL
+VERDADERO:
+  MOV B,(contador)
+  MOV A,(inverso)
+  CMP A,B
+  JEQ FINAL
+  INC B
+  SUB A,1
+  MOV (inverso),A
+  MOV (contador),B
+  JMP LOOP
+FINAL:
+  MOV A,(res)
