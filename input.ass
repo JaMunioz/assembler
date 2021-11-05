@@ -1,20 +1,28 @@
 DATA:
   lista #A0
   n 5
-  res
+  res 0
   aux 0
 CODE:
-  CMP 1,0
-  JEQ #0E
-  MOV (0),A
-  MOV (1),B
+siguiente:
+  MOV B,(lista)
+  MOV A,(B)
+  INC B
+  MOV B,(B)
+  CMP A,B
+  JGE comparar
+  MOV (aux),A
   MOV A,B
-  MIV B,A
-  MOV A,(0)
+  MOV B,(aux)
+comparar:
+  SUB A,B
+  CMP A,(res)
+  JLE revisar
+  MOV (res),A
+revisar:
+  MOV A,(n)
   SUB A,1
-  JEL #0D
-  MOV (0),A
-  MOV A,B
-  ADD (1),B
-  JMP #05
-  MOV A,B
+  MOV (n),A
+  INC (lista)
+  CMP A,1
+  JGT siguiente
